@@ -7,7 +7,7 @@ const  {checkPassword}  = require('../auth/controller');
 passport.use(
   new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
     try {
-        console.log(email)
+        
       const user = await users.findOne({ email });
 
       if (!user) {

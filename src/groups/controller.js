@@ -1,15 +1,13 @@
-const model = require('./model');
+const groups = require('./model');
 const { v4: uuidv4 } = require('uuid');
 const users = require('../auth/model')
-const groups = require('../groups/model')
+
 async function createGroup(req, res){
     try {
-        const uuid = uuidv4();
         const groupName = req.body.name;
         
 
         const newGroup = {
-            uuid: uuid,
             name: groupName,
             creator: {
                 id: req.user._id,
@@ -22,7 +20,7 @@ async function createGroup(req, res){
         }
 
         // Assuming model.createGroup creates and saves the group in the database
-        await model.create(newGroup);
+        await groups.create(newGroup);
 
         return res.status(200).json({ 'message': "Group created successfully"});
     } catch (error) {
@@ -32,11 +30,11 @@ async function createGroup(req, res){
 }
 async function joinGroup(req, res){
     try {
-        const groupUuid = req.body.uuid;
+        const groupId = req.body.groupId;
         const userId = req.user._id;
 
         // Find the group by UUID
-        const group = await groups.findOne({ uuid: groupUuid });
+        const group = await groups.findById({ groupId });
 
         if (group) {
             // Ensure that the members array exists
